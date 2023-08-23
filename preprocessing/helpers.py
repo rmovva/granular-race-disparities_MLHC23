@@ -275,6 +275,7 @@ def generate_past_icu_visits(df_main, df_icustays, timerange):
 
 
 def generate_future_ed_visits(df_main, next_ed_visit_timerange):
+    # next_ed_visit_timerange: in days
     N = len(df_main)
     time_of_next_ed_visit = [float("NaN") for _ in range(N)]
     time_to_next_ed_visit = [float("NaN") for _ in range(N)]
@@ -343,7 +344,6 @@ def generate_numeric_timedelta(df_main):
 
 
 def encode_chief_complaints(df_main, complaint_dict):
-
     holder_list = []
     complaint_colnames_list = list(complaint_dict.keys())
     complaint_regex_list = list(complaint_dict.values())
@@ -463,6 +463,8 @@ def display_outliers_count(df_main, vitals_valid_range):
 
 
 def add_score_CCI(df):
+    # See description of Charlson comorbidity index here:
+    # https://www.sciencedirect.com/science/article/abs/pii/0895435694901295
     conditions = [
         (df['age'] < 50),
         (df['age'] >= 50) & (df['age'] <= 59),
@@ -477,11 +479,13 @@ def add_score_CCI(df):
 
 
 def add_triage_MAP(df):
+    # Mean arterial pressure (MAP): average pressure in arteries during one cardiac cycle.
     df['triage_MAP'] = df['triage_sbp']*1/3 + df['triage_dbp']*2/3
     print("Variable 'add_triage_MAP' successfully added")
 
 
 def add_score_REMS(df):
+    # REMS score: https://pubmed.ncbi.nlm.nih.gov/24793256/
     conditions1 = [
         (df['age'] < 45),
         (df['age'] >= 45) & (df['age'] <= 54),
@@ -530,6 +534,8 @@ def add_score_REMS(df):
     print("Variable 'Score_REMS' successfully added")
     
 def add_score_CART(df):
+    # Cardiac Arrest Risk Triage (CART): https://www.atsjournals.org/doi/10.1164/rccm.201406-1022OC
+    # https://www.mdcalc.com/calc/10029/cart-cardiac-arrest-risk-triage-score
     conditions1 = [
         (df['age'] < 55),
         (df['age'] >= 55) & (df['age'] <= 69),
@@ -562,6 +568,8 @@ def add_score_CART(df):
     
 
 def add_score_NEWS(df):
+    # NEWS score: https://www.mdcalc.com/calc/1873/national-early-warning-score-news
+    # https://www.bmj.com/content/345/bmj.e5310
     conditions1 = [
         (df['triage_resprate'] <= 8),
         (df['triage_resprate'] >= 9) & (df['triage_resprate'] <= 11),
@@ -645,6 +653,8 @@ def add_score_NEWS2(df):
     
 
 def add_score_MEWS(df):     
+    # Modified Early Warning Score (MEWS)
+    # https://www.mdcalc.com/calc/1875/modified-early-warning-score-mews-clinical-deterioration
     conditions1 = [
         (df['triage_sbp'] <= 70),
         (df['triage_sbp'] >= 71) & (df['triage_sbp'] <= 80),
@@ -681,6 +691,8 @@ def add_score_MEWS(df):
     
 
 def add_score_SERP2d(df): 
+    # Score for Emergency Risk Prediction (SERP) family: https://pubmed.ncbi.nlm.nih.gov/34448870/
+    # There's a SERP2d, 7d, and 30d to estimate risk of mortality in that many days.
     conditions1 = [
         (df['age'] < 30),
         (df['age'] >= 30) & (df['age'] <= 49),
