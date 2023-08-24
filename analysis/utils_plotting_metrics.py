@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from matplotlib import pyplot as plt
-plt.rcParams["font.family"] = "Arial CE"
+# plt.rcParams["font.family"] = "Arial CE"
 from matplotlib.patches import Patch
 import seaborn as sns
 
